@@ -2,6 +2,7 @@
 #include<algorithm>
 #include<sstream>
 #include<algorithm>  // find
+#include "myExceptions.h"
 using namespace std;
 
 template <class T>
@@ -10,6 +11,7 @@ protected:
     int listSize;
     int arrayLength;
     T * element;
+    void checkIndex(int theIndex) const;
 public:
     arrayList(int init_capacity );
     ~arrayList(){delete [] element;}
@@ -19,7 +21,9 @@ public:
     void insert(int theIndex,const  T& theElement);
     int indexOf(const T& theElement) const;
     T& get(int theIndex) const;
+    void erase(int theIndex);
 };
+
 
 template <class T>
 arrayList<T>::arrayList(int init_capacity){
@@ -27,6 +31,13 @@ arrayList<T>::arrayList(int init_capacity){
     element = new T[arrayLength];
     listSize = 0;
 };
+
+template<class Ta>
+void arrayList<Ta>::erase(int theIndex){
+    copy(element + theIndex +1, element + listSize, element + theIndex);
+    //listSize--;
+    element[--listSize].~Ta(); 
+}
 
 template <class T>
 void arrayList<T>::insert(int theIndex, const T& theElement){
@@ -45,8 +56,19 @@ int arrayList<T>::indexOf(const T& theElement) const{
 }
 
 template<class T>
-T& arrayList<T>::get(int theIndex) const{
+void arrayList<T>::checkIndex(int theIndex) const
+{// Verify that theIndex is between 0 and listSize - 1.
+   if (theIndex < 0 || theIndex >= listSize)
+   {ostringstream s;
+    s << "index = " << theIndex << " size = " << listSize;
+    throw illegalIndex(s.str());
+   }
 
+}
+
+template<class T>
+T& arrayList<T>::get(int theIndex) const{
+    //checkIndex(theIndex);
     T& result = element[theIndex];
     return result;
 
@@ -61,11 +83,18 @@ int main(){
     al.insert(1,3);
     cout << "arrayList capacity is : " << al.capacity() << endl;
     cout << "arrayList size is : " << al.size() << endl;
-    cout << "hello " << endl;
-    int index = al.indexOf(4);
-    cout << "the index is " << index << endl;
-    int a = al.get(0);
-    int& b = al.get(0);
-    cout << "b: " << b << endl;
-    cout << "a: " << a << endl;
+    al.erase(0);
+    
+    cout << "al.get(0): " << al.get(0)<< endl;
+    cout << "al.get(1): " << al.get(1)<< endl;
+    cout << "al.get(2): " << al.get(2)<< endl;
+
+    cout << "after erase arrayList size is : " << al.size() << endl;
+
+    //int index = al.indexOf(4);
+    //cout << "the index is " << index << endl;
+    //int a = al.get(0);
+    //int& b = al.get(0);
+    //cout << "b: " << b << endl;
+    //cout << "a: " << a << endl;
 }

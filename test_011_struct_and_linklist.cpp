@@ -4,17 +4,22 @@ using namespace std;
 struct people{
     string name;
     int age;
-    people *next;
+};
+struct node{
+    people peo;
+    node *next;
+    node(people x):peo(x),next(NULL){};
+
 };
 
 class linkList{
 private:
-    people *head;
+    node *head;
     int length;
 public:
     linkList();
     ~linkList();
-    void insert(string na, int ag,int pos);
+    void insert(people pp,int pos);
     void print();
     int size(){return length;}
     void erase();
@@ -28,7 +33,7 @@ linkList::linkList(){
     cout << "hello" << endl;
 }
 linkList::~linkList(){
-    peopel *temp;
+    node *temp;
     for (int i=0; i< length ; i++){
         temp = head;
         head = head->next;
@@ -36,27 +41,31 @@ linkList::~linkList(){
     }
 }
 
-void linkList::insert(string na, int ag,int pos){
-    people *p = new people();
-    p->name = na;
-    p->age = ag;
-    people *temp;
-    temp = head;
+void linkList::insert(people pp,int pos){
+
+    node *currentNode;
+    node *insertNode = new node(pp);
+    currentNode = head;
+
     if (pos==0){
-        p->next = temp;
-        head = p;
+        insertNode->next = currentNode;
+        head = insertNode;
         length++;
         return;
     }
 
     int index = 1;
-    while(temp !=NULL and index < pos )
+    while( currentNode!=NULL and index < pos )
     {
-        temp = temp->next;
+        currentNode = currentNode->next;
         index++; 
     }
-    p->next = temp->next;
-    temp->next = p;
+    if (currentNode ==NULL) {
+        cout << "insert failed! " << endl;
+        return;
+    }
+    insertNode->next = currentNode->next;
+    currentNode->next = insertNode;
     length++;
 }
 
@@ -65,11 +74,11 @@ void linkList::print(){
         cout << "head is empty!" << endl;
         return;
     }
-    people *t;
-    t = head;
-    while (t!= NULL){
-        cout << t->name <<" " <<  t->age << endl;
-        t = t->next;
+    node *currentNode;
+    currentNode = head;
+    while (currentNode!= NULL){
+        cout << currentNode->peo.name <<" " <<  currentNode->peo.age << endl;
+        currentNode = currentNode->next;
     }
 }
 
@@ -80,70 +89,33 @@ void linkList::erase(){
         length--;
         return;
     }
-    people *temp = new people();
-    temp = head;
+    node *currentNode;
+    currentNode = head;
     //cout << "temp-> name: "<< temp->name << endl; 
 
     int index = 1;
-    while (temp!= NULL and index < pos-1 ){
-        temp = temp->next;
+    while (currentNode!= NULL and index < pos-1 ){
+        currentNode = currentNode->next;
         index++;
     }
-    temp->next = temp->next->next;
+    currentNode->next = currentNode->next->next;
     length--;
 }
 
 int main(){
 
      linkList hea;
-     hea.insert("howard",28,0);
-     hea.insert("mali",30,0);
-     hea.insert("dandan",26,1);
-     hea.insert("tuzi",24,2);
-     hea.insert("jj",3,0);
+     people p1,p2;
+     p1.name = "howard"; p1.age = 28;
+     p2.name = "mali";p2.age = 30;
+     hea.insert(p1,0);
+     hea.insert(p2,1);
      cout <<  "-----------before erase ---------------" << endl;
      hea.print();
      hea.erase();
      cout <<  "-----------after erase ---------------" << endl;
      hea.print();
      cout << "size: " << hea.size() << endl;
-     //people *pp = new people();
-     //pp->name = "pp_name";
-     //pp->age = 3;
-     //people *hh;
-     
-     //hh = pp;
-     //cout << pp->name << endl;
-     //cout << hh->name << endl;
-     
-     //people *p = new people();
-     //p->name = "howard";
-     //p->age = 28;
-     //cout << p->name << endl;
-     //people p[3];
-     //p[0].name = "howard";
-     //p[0].age = 28;
-     //head = &p[0];
-    //p[0].next = &p[1];
-    //p[1].name = "mali";
-    //p[1].age = 30;
-    //p[1].next = &p[2];
-    //p[2].name = "dandan";
-    //p[2].age = 26;
-    //p[2].next = NULL;
-    //people *pp;
-    //pp = p;
-    //cout << pp->name << endl;
-    //pp = pp->next;
-    //cout << pp->name <<endl;
-    //pp = pp->next;
-    //cout << pp->name << endl;
-    //pp = pp ->next;
-    //cout << pp->name << endl;
-    //while (pp != NULL){
-    //    cout << pp->name << endl;
-    //    pp = pp->next;
-    //} 
     
     return 0;
 }

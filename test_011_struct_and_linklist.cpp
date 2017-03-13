@@ -8,7 +8,7 @@ struct people{
 struct node{
     people peo;
     node *next;
-    node(people x):peo(x),next(NULL){};
+    node(people x):peo(x),next(NULL){}; // struct的构造函数
 
 };
 
@@ -108,6 +108,8 @@ int main(){
      people p1,p2;
      p1.name = "howard"; p1.age = 28;
      p2.name = "mali";p2.age = 30;
+     node *n = new node(p1);
+     cout << "n->peo.name: " << n->peo.name << endl;
      hea.insert(p1,0);
      hea.insert(p2,1);
      cout <<  "-----------before erase ---------------" << endl;
@@ -116,8 +118,7 @@ int main(){
      cout <<  "-----------after erase ---------------" << endl;
      hea.print();
      cout << "size: " << hea.size() << endl;
-    
-    return 0;
+     return 0;
 }
 
 
